@@ -13,7 +13,7 @@ def load_all_data(data_path,batch_size,nbatches,mode='train'):
     data_mode = mode
     if mode =='val':
         data_mode = 'train'
-    data_reader = reader.DecompensationReader(dataset_dir=os.path.join(data_path, data_mode),
+    data_reader = reader.InHospitalMortalityReader(dataset_dir=os.path.join(data_path, data_mode),
                                       listfile=os.path.join(data_path, mode+'_listfile.csv'))
     # val_reader = reader.LengthOfStayReader(dataset_dir=os.path.join(data_path, 'train'),
     #                                 listfile=os.path.join(data_path, 'val_listfile.csv'))
@@ -25,7 +25,7 @@ def load_all_data(data_path,batch_size,nbatches,mode='train'):
     cont_channels = [i for (i, x) in enumerate(discretizer_header) if x.find("->") == -1]
     normalizer = preprocessing.Normalizer(fields=cont_channels)
     normalizer_directory = 'normalizer'
-    normalizer_state = 'decomp_ts{}.input_str-previous.n1e5.start_time-zero.normalizer'.format(1.0)
+    normalizer_state = 'ihm_ts{}.input_str-previous.start_time-zero.normalizer'.format(1.0)
     normalizer_state = os.path.join(normalizer_directory, normalizer_state)
     normalizer.load_params(normalizer_state)
     loss_function = 'sparse_categorical_crossentropy'

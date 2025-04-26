@@ -45,7 +45,8 @@ class Meta(nn.Module):
         self.domain_net = nn.Linear(128, 1)
         self.label0 = torch.zeros(8, 1).cuda()
         self.label1 = torch.ones(8, 1).cuda()
-        self.tau = -999999
+        self.tau = args.tau
+        #self.tau = -999999
 
     def single_task_loss(self, data_in):
         # Unpack data for clarity

@@ -63,6 +63,7 @@ parser.add_argument('--meta-lr', type=float, default=0.0005, help='epsilon of la
 parser.add_argument('--update-step', type=int, default=5, help='epsilon of label smoothing')
 parser.add_argument('--update-step-test', type=int, default=5, help='epsilon of label smoothing')
 parser.add_argument('--local_rank', type=int, default=2, help='epsilon of label smoothing')
+parser.add_argument('--tau', type=float, default=0.8,help='Confidence threshold for pseudo-labeling')
 
 def Sample(cluster_num, len_pre, len_last, epi_dom, batch_size):
     domain = random.sample(range(cluster_num), epi_dom)
@@ -76,7 +77,7 @@ args = parser.parse_args()
 
 print(datetime.datetime.now())
 # Training parameters
-DATASET_PATH = './data/decompensation'
+DATASET_PATH = './data/in-hospital-mortality'
 
 BATCH_SIZE = 8
 NUM_WORKERS = 4
