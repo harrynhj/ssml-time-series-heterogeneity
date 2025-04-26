@@ -76,7 +76,7 @@ args = parser.parse_args()
 
 print(datetime.datetime.now())
 # Training parameters
-DATASET_PATH = './data/decompensation'
+DATASET_PATH = './data/length-of-stay'
 
 BATCH_SIZE = 8
 NUM_WORKERS = 4
@@ -194,7 +194,7 @@ for idx_epoch in range(EPOCHS):
         # y_true = np.reshape(y_true_all, (-1,1))
         # y_pred = np.reshape(y_pred_all, (-1,1))
         predictions = y_pred_all
-        roc, prc = print_metrics_binary(y_true_all, predictions)
+        roc, prc = print_metrics_regression(y_true_all, predictions)
         roc_all.append(roc)
         prc_all.append(prc)
     mean_roc = np.mean(roc_all)
