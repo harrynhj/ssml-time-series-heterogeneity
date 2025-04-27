@@ -46,7 +46,7 @@ parser.add_argument('--test-query', type=int, default=4,
                         help='number of query examples per validation class')
 parser.add_argument('--val-episode', type=int, default=2000,
                         help='number of episodes per validation')
-parser.add_argument('--save-path', default='./experiments/exp_1')
+parser.add_argument('--save-path', default='./ /exp_1')
 parser.add_argument('--gpu', default='0, 1, 2, 3')
 parser.add_argument('--network', type=str, default='ProtoNet',
                         help='choose which embedding network to use. ProtoNet, R2D2, ResNet')
