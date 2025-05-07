@@ -91,6 +91,8 @@ class PhasedLSTMCell(nn.Module):
         self.leak = leak
         self.ratio_on = ratio_on
 
+        # self.cell = nn.LSTMCell(hidden_size, hidden_size)
+        
         self.input_weights = nn.Linear(input_size, 4 * hidden_size)
         self.hidden_weights = nn.Linear(hidden_size, 4 * hidden_size)
 
