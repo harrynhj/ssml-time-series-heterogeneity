@@ -2,6 +2,7 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 import numpy as np
+import math
 
 from utils import generate_original_PE, generate_regular_PE, DenseInterpolation
 
@@ -81,3 +82,36 @@ class LSTM(nn.Module):
         predictions = lstm_out.view(-1)
 
         return predictions, ht
+    
+
+class PhasedLSTMCell(nn.Module):
+    def __init__(self, input_size, hidden_size, leak=0.001, ratio_on=0.1, period_init_min=1.0, period_init_max=1000.0):
+        super(PhasedLSTMCell, self).__init__()
+        self.hidden_size = hidden_size
+        self.leak = leak
+        self.ratio_on = ratio_on
+
+        self.input_weights = nn.Linear(input_size, 4 * hidden_size)
+        self.hidden_weights = nn.Linear(hidden_size, 4 * hidden_size)
+
+        log_period = torch.empty(hidden_size).uniform_(math.log(period_init_min), math.log(period_init_max))
+        self.tau = nn.Parameter(torch.exp(log_period))
+        self.phase = nn.Parameter(torch.rand(hidden_size) * self.tau)
+
+    def forward(self, input, hidden, time):
+        h_prev, c_prev = hidden
+
+        gates = self.input_weights(input) + self.hidden_weights(h_prev)
+        i_gate, f_gate, o_gate, g_gate = gates.chunk(4, 1)
+        i = torch.sigmoid(i_gate)
+        f = torch.sigmoid(f_gate)
+        o = torch.sigmoid(o_gate)
+        g = torch.tanh(g_gate)
+
+        phi = ((time - self.phase) % self.tau) / self.tau
+        k = torch.where(phi < self.ratio_on, 1.0, self.leak * phi)
+
+        c = f * c_prev + i * g * k.unsqueeze(0)
+        h = o * torch.tanh(c) * k.unsqueeze(0)
+
+        return h, c
