@@ -88,7 +88,6 @@ def print_metrics_binary(y_true, predictions, verbose=1):
 
     return auroc, auprc
 
-
 def mean_absolute_percentage_error(y_true, y_pred):
     return np.mean(np.abs((y_true - y_pred) / (y_true + 0.1))) * 100
 
